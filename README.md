@@ -19,7 +19,24 @@ You can install the package via composer:
 composer require nwidart/laravel-menus
 ```
 
-The package will automatically register its service provider.
+Or install directly from GitHub repository:
+
+```bash
+composer require mrfansi/laravel-menus:dev-main
+```
+
+To do this, you need to add the repository to your `composer.json`:
+
+```json
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/mrfansi/laravel-menus"
+        }
+    ]
+}
+```
 
 ## Usage
 

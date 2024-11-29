@@ -37,8 +37,6 @@ class MenusServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerMenu();
-
         $this->app->register('Spatie\Html\HtmlServiceProvider');
 
         $this->app->alias('html', 'Spatie\Html\HtmlBuilder');
