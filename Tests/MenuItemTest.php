@@ -13,11 +13,12 @@ class MenuItemTest extends BaseTestCase
      */
     private $menu;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->menu = app(Menu::class);
     }
+
     /** @test */
     public function it_can_make_an_empty_menu_item()
     {

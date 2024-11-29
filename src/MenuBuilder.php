@@ -61,7 +61,7 @@ class MenuBuilder implements Countable
     /**
      * Determine whether the ordering feature is enabled or not.
      *
-     * @var boolean
+     * @var bool
      */
     protected $ordering = false;
 
@@ -290,7 +290,7 @@ class MenuBuilder implements Countable
                 $key[$k] = $this->resolve($v);
             }
         } elseif (is_string($key)) {
-            $matches = array();
+            $matches = [];
             preg_match_all('/{[\s]*?([^\s]+)[\s]*?}/i', $key, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
                 if (array_key_exists($match[1], $this->bindings)) {
@@ -327,7 +327,7 @@ class MenuBuilder implements Countable
      *
      * @return \Nwidart\Menus\MenuItem
      */
-    public function add(array $attributes = array())
+    public function add(array $attributes = [])
     {
         $item = MenuItem::make($attributes);
 
@@ -345,7 +345,7 @@ class MenuBuilder implements Countable
      *
      * @return $this
      */
-    public function dropdown($title, \Closure $callback, $order = null, array $attributes = array())
+    public function dropdown($title, \Closure $callback, $order = null, array $attributes = [])
     {
         $properties = compact('title', 'order', 'attributes');
 
@@ -377,7 +377,7 @@ class MenuBuilder implements Countable
      *
      * @return static
      */
-    public function route($route, $title, $parameters = array(), $order = null, $attributes = array())
+    public function route($route, $title, $parameters = [], $order = null, $attributes = [])
     {
         if (func_num_args() == 4) {
             $arguments = func_get_args();
@@ -389,7 +389,7 @@ class MenuBuilder implements Countable
             ]);
         }
 
-        $route = array($route, $parameters);
+        $route = [$route, $parameters];
 
         $item = MenuItem::make(
             compact('route', 'title', 'parameters', 'attributes', 'order')
@@ -409,7 +409,7 @@ class MenuBuilder implements Countable
      */
     protected function formatUrl($url)
     {
-        $uri = !is_null($this->prefixUrl) ? $this->prefixUrl . $url : $url;
+        $uri = ! is_null($this->prefixUrl) ? $this->prefixUrl . $url : $url;
 
         return $uri == '/' ? '/' : ltrim(rtrim($uri, '/'), '/');
     }
@@ -423,7 +423,7 @@ class MenuBuilder implements Countable
      *
      * @return static
      */
-    public function url($url, $title, $order = 0, $attributes = array())
+    public function url($url, $title, $order = 0, $attributes = [])
     {
         if (func_num_args() == 3) {
             $arguments = func_get_args();
@@ -452,7 +452,7 @@ class MenuBuilder implements Countable
      */
     public function addDivider($order = null)
     {
-        $this->items[] = new MenuItem(array('name' => 'divider', 'order' => $order));
+        $this->items[] = new MenuItem(['name' => 'divider', 'order' => $order]);
 
         return $this;
     }
@@ -464,11 +464,11 @@ class MenuBuilder implements Countable
      */
     public function addHeader($title, $order = null)
     {
-        $this->items[] = new MenuItem(array(
+        $this->items[] = new MenuItem([
             'name' => 'header',
             'title' => $title,
             'order' => $order,
-        ));
+        ]);
 
         return $this;
     }
@@ -510,7 +510,7 @@ class MenuBuilder implements Countable
      */
     public function destroy()
     {
-        $this->items = array();
+        $this->items = [];
 
         return $this;
     }
@@ -526,7 +526,7 @@ class MenuBuilder implements Countable
     {
         $this->resolveItems($this->items);
 
-        if (!is_null($this->view)) {
+        if (! is_null($this->view)) {
             return $this->renderView($presenter);
         }
 
@@ -534,7 +534,7 @@ class MenuBuilder implements Countable
             $this->setPresenterFromStyle($presenter);
         }
 
-        if (!is_null($presenter) && !$this->hasStyle($presenter)) {
+        if (! is_null($presenter) && ! $this->hasStyle($presenter)) {
             $this->setPresenter($presenter);
         }
 

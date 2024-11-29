@@ -14,7 +14,7 @@ class Menu implements Countable
      *
      * @var array
      */
-    protected $menus = array();
+    protected $menus = [];
     /**
      * @var Repository
      */
@@ -116,7 +116,7 @@ class Menu implements Countable
      *
      * @return string|null
      */
-    public function get($name, $presenter = null, $bindings = array())
+    public function get($name, $presenter = null, $bindings = [])
     {
         return $this->has($name) ?
             $this->menus[$name]->setBindings($bindings)->render($presenter) : null;
@@ -130,7 +130,7 @@ class Menu implements Countable
      *
      * @return string
      */
-    public function render($name, $presenter = null, $bindings = array())
+    public function render($name, $presenter = null, $bindings = [])
     {
         return $this->get($name, $presenter, $bindings);
     }
@@ -170,6 +170,6 @@ class Menu implements Countable
      */
     public function destroy()
     {
-        $this->menus = array();
+        $this->menus = [];
     }
 }

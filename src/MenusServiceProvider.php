@@ -2,7 +2,6 @@
 
 namespace Nwidart\Menus;
 
-use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
 class MenusServiceProvider extends ServiceProvider
@@ -38,26 +37,16 @@ class MenusServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerHtmlPackage();
+        $this->registerMenu();
+
+        $this->app->register('Spatie\Html\HtmlServiceProvider');
+
+        $this->app->alias('html', 'Spatie\Html\HtmlBuilder');
+        $this->app->alias('form', 'Spatie\Html\FormBuilder');
 
         $this->app->singleton('menus', function ($app) {
             return new Menu($app['view'], $app['config']);
         });
-    }
-
-    /**
-     * Register "iluminate/html" package.
-     */
-    private function registerHtmlPackage()
-    {
-        $this->app->register('Collective\Html\HtmlServiceProvider');
-
-        $aliases = [
-            'HTML' => 'Collective\Html\HtmlFacade',
-            'Form' => 'Collective\Html\FormFacade',
-        ];
-
-        AliasLoader::getInstance($aliases)->register();
     }
 
     /**

@@ -3,11 +3,11 @@
 namespace Nwidart\Menus;
 
 use Closure;
-use Collective\Html\HtmlFacade as HTML;
 use Illuminate\Contracts\Support\Arrayable as ArrayableContract;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
+use Spatie\Html\Html;
 
 /**
  * @property string url
@@ -34,14 +34,14 @@ class MenuItem implements ArrayableContract
      *
      * @var array
      */
-    protected $childs = array();
+    protected $childs = [];
 
     /**
      * The fillable attribute.
      *
      * @var array
      */
-    protected $fillable = array(
+    protected $fillable = [
         'url',
         'route',
         'title',
@@ -52,7 +52,7 @@ class MenuItem implements ArrayableContract
         'active',
         'order',
         'hideWhen',
-    );
+    ];
 
     /**
      * The hideWhen callback.
@@ -62,14 +62,22 @@ class MenuItem implements ArrayableContract
     protected $hideWhen;
 
     /**
+     * The HTML builder.
+     *
+     * @var Html
+     */
+    protected $html;
+
+    /**
      * Constructor.
      *
      * @param array $properties
      */
-    public function __construct($properties = array())
+    public function __construct($properties)
     {
         $this->properties = $properties;
         $this->fill($properties);
+        $this->html = app(Html::class);
     }
 
     /**
@@ -82,7 +90,7 @@ class MenuItem implements ArrayableContract
     protected static function setIconAttribute(array $properties)
     {
         $icon = Arr::get($properties, 'attributes.icon');
-        if (!is_null($icon)) {
+        if (! is_null($icon)) {
             $properties['icon'] = $icon;
 
             Arr::forget($properties, 'attributes.icon');
@@ -155,7 +163,7 @@ class MenuItem implements ArrayableContract
      *
      * @return $this
      */
-    public function dropdown($title, \Closure $callback, $order = 0, array $attributes = array())
+    public function dropdown($title, \Closure $callback, $order = 0, array $attributes = [])
     {
         $properties = compact('title', 'order', 'attributes');
 
@@ -187,7 +195,7 @@ class MenuItem implements ArrayableContract
      *
      * @return MenuItem
      */
-    public function route($route, $title, $parameters = array(), $order = 0, $attributes = array())
+    public function route($route, $title, $parameters = [], $order = 0, $attributes = [])
     {
         if (func_num_args() === 4) {
             $arguments = func_get_args();
@@ -199,7 +207,7 @@ class MenuItem implements ArrayableContract
             ]);
         }
 
-        $route = array($route, $parameters);
+        $route = [$route, $parameters];
 
         return $this->add(compact('route', 'title', 'order', 'attributes'));
     }
@@ -213,7 +221,7 @@ class MenuItem implements ArrayableContract
      *
      * @return MenuItem
      */
-    public function url($url, $title, $order = 0, $attributes = array())
+    public function url($url, $title, $order = 0, $attributes = [])
     {
         if (func_num_args() === 3) {
             $arguments = func_get_args();
@@ -253,7 +261,7 @@ class MenuItem implements ArrayableContract
      */
     public function addDivider($order = null)
     {
-        $item = static::make(array('name' => 'divider', 'order' => $order));
+        $item = static::make(['name' => 'divider', 'order' => $order]);
 
         $this->childs[] = $item;
 
@@ -281,10 +289,10 @@ class MenuItem implements ArrayableContract
      */
     public function addHeader($title)
     {
-        $item = static::make(array(
+        $item = static::make([
             'name' => 'header',
             'title' => $title,
-        ));
+        ]);
 
         $this->childs[] = $item;
 
@@ -385,7 +393,7 @@ class MenuItem implements ArrayableContract
 
         Arr::forget($attributes, ['active', 'icon']);
 
-        return HTML::attributes($attributes);
+        return $this->html->attributes($attributes);
     }
 
     /**
@@ -427,7 +435,7 @@ class MenuItem implements ArrayableContract
      */
     public function hasSubMenu()
     {
-        return !empty($this->childs);
+        return ! empty($this->childs);
     }
 
     /**
@@ -556,7 +564,7 @@ class MenuItem implements ArrayableContract
      */
     protected function hasRoute()
     {
-        return !empty($this->route);
+        return ! empty($this->route);
     }
 
     /**
@@ -596,7 +604,7 @@ class MenuItem implements ArrayableContract
      * Set hide condition for current menu item.
      *
      * @param  Closure
-     * @return boolean
+     * @return bool
      */
     public function hideWhen(Closure $callback)
     {
@@ -608,7 +616,7 @@ class MenuItem implements ArrayableContract
     /**
      * Determine whether the menu item is hidden.
      *
-     * @return boolean
+     * @return bool
      */
     public function hidden()
     {
